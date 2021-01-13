@@ -8,17 +8,20 @@ const { liff } = window;
 function App() {
   const [signInFinished, setSignInFinished] = useState(false);
   const [signInFailed, setSignInFailed] = useState(false);
+  const [displayName, setDisplayName] = useState("");
 
   useEffect(() => {
     liff
       .init({
-        liffId: "1655574570-7ZX6eA5P",
+        liffId: process.env.REACT_APP_LIFF_ID,
       })
       .then(async () => {
         // ログインしてるかチェック
         if (!liff.isLoggedIn()) {
           liff.login();
         }
+        const profile = await liff.getProfile();
+        setDisplayName(profile.displayName);
         setSignInFinished(true);
       })
       .catch((error) => {
@@ -36,15 +39,7 @@ function App() {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <p>React</p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
+          <p>Name: {displayName}</p>
         </header>
       </div>
     );
